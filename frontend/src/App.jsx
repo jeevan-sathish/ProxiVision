@@ -1,8 +1,11 @@
 import React from 'react'
+import Responce from './components/Responce'
 
 const App = () => {
   return (
-    <div className='text-amber-800'>App</div>
+    <div >
+      <Responce/>
+    </div>
   )
 }
 
