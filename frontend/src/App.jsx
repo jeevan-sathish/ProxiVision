@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./components/pages/Home.jsx";
 import About from "./components/pages/About.jsx";
 import Test from "./components/pages/Test.jsx";
+import Footer from "./components/Footer.jsx";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
@@ -24,6 +25,8 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/test" element={<Test />} /> 
       </Routes>
+
+      <Footer/>
      
     </div>
   );

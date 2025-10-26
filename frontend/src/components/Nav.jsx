@@ -1,12 +1,12 @@
 import React from "react";
 import { ThemeContext } from "../context/ThemeContext.jsx";
-import { MdLightMode } from "react-icons/md";
-import { MdOutlineLightMode } from "react-icons/md";
+
 import NavLinks from "./navigationLinks/NavLinks.jsx";
+import NavThemeBtn from "./navigationLinks/NavThemeBtn.jsx";
 
 
 const Nav = () => {
-  const { theme, toggleTheme } = React.useContext(ThemeContext);
+  const { theme } = React.useContext(ThemeContext);
 
   return (
     <div
@@ -26,13 +26,8 @@ const Nav = () => {
       </div>
       <NavLinks/>
 
-      
-      <button
-        className="w-[30px] h-[30px] m-2.5 flex justify-center items-center  bg-green-700 hover:bg-green-600 text-white rounded-full transition text-[30px]"
-        onClick={toggleTheme}
-      >
-         {theme === "light" ? <MdLightMode/> : <MdOutlineLightMode/>} 
-      </button>
+      <NavThemeBtn/>
+     
     </div>
   );
 };
