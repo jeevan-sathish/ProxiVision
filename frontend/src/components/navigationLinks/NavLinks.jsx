@@ -18,12 +18,12 @@ const NavLinks = () => {
             About
          </Link>
 
-        <Link 
+        {/* <Link 
             to="/test"
             className='hover:text-amber-400 hover:font-medium hover:transition-colors duration-550'
         >
             Test
-        </Link>
+        </Link> */}
     </div>
   )
 }

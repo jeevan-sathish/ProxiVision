@@ -10,7 +10,7 @@ const Test = () => {
           ? "bg-gray-100 text-gray-900"
           : "bg-gray-900 text-gray-100"
       }`}
-    >About</div>
+    >Test</div>
   )
 }
 
