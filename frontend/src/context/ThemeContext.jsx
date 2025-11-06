@@ -6,6 +6,7 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState("light");
   const [proxiValue   , setProxiValue] = useState(null);
 
+
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };

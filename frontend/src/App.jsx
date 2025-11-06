@@ -6,6 +6,7 @@ import Home from "./components/pages/Home.jsx";
 import About from "./components/pages/About.jsx";
 import Test from "./components/pages/Test.jsx";
 import Footer from "./components/Footer.jsx";
+import KnowForm from "./components/pages/knowForm.jsx";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/test" element={<Test />} /> 
+        <Route path="/KnowForm" element={<KnowForm/>} />
       </Routes>
 
       <Footer/>

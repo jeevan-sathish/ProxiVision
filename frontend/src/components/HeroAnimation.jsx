@@ -29,10 +29,10 @@ const HeroAnimation = () => {
   return (
     <div
       className="min-w-[50%] h-[250px] flex flex-row justify-center items-center"
-      style={{ gap: `${proxiValue/2}px` }}
+      style={{ gap: `${proxiValue}px` }}
     >
       {
-        proxiValue>60?(
+        proxiValue>35?(
             <img
         src="normalview.png"
         alt="Normal view"
