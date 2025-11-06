@@ -13,7 +13,7 @@ const Disclamer = ({ close }) => {
       }`}
     >
       <div className="flex items-start gap-4">
-        <CgDanger className="text-4xl text-red-500 flex-shrink-0" />
+        <CgDanger className="text-4xl text-red-500 flex shrink-0" />
         <div>
           <h2 className="text-xl font-bold mb-2">Disclaimer</h2>
           <p className="text-sm">
@@ -23,7 +23,7 @@ const Disclamer = ({ close }) => {
         </div>
       </div>
 
-      <div className="flex justify-end mt-4 flex flex-row gap-[15px]">
+      <div className="flex justify-end mt-4  flex-row gap-[15px]">
       <button  className="px-6 py-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors animate-pulse">
         <Link to='/Test'>Test</Link>
       </button>
