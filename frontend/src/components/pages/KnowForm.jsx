@@ -3,7 +3,7 @@ import { ThemeContext } from '../../context/ThemeContext'
 
 const KnowForm = () => {
 
-    const {theme,handleChange,userData} =useContext(ThemeContext)
+    const {theme} =useContext(ThemeContext)
 
 
 
