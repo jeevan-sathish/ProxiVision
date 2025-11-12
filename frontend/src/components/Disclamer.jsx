@@ -25,7 +25,7 @@ const Disclamer = ({ close }) => {
 
       <div className="flex justify-end mt-4  flex-row gap-[15px]">
       <button  className="px-6 py-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors animate-pulse">
-        <Link to='/KnowForm'>Know me</Link>
+        <Link to='/Test'>Know me</Link>
       </button>
         <button
           onClick={close}
