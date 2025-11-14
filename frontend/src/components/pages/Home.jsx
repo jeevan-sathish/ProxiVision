@@ -3,9 +3,12 @@ import { ThemeContext } from "../../context/ThemeContext.jsx";
 import HeroAnimation from "../HeroAnimation.jsx";
 import Disclamer from "../Disclamer.jsx";
 
+
+
 const Home = () => {
   const [disclamer, setDisclamer] = useState(false);
   const { theme } = useContext(ThemeContext);
+  
 
   function handleDisclamer() {
     setDisclamer((prev) => !prev);

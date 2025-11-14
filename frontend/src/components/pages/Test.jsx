@@ -1,9 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { MdHealthAndSafety } from "react-icons/md";
+import TestResult from "../TestResult";
 
 const Test = () => {
   const { theme } = useContext(ThemeContext);
+  const [btnclick,setbtnClick] =useState(false)
 
   const [userData, setUserData] = useState({
     name: "",
@@ -20,6 +22,10 @@ const Test = () => {
   });
 
   const [isFormValid, setIsFormValid] = useState(false);
+
+  function handleBtnClick(){
+      setbtnClick(prev=>!prev)
+  }
 
 
   useEffect(() => {
@@ -58,7 +64,7 @@ const Test = () => {
 
   return (
     <div
-      className={`w-full min-h-screen flex flex-col text-center transition-colors duration-500 ${
+      className={`w-full min-h-screen flex flex-col relative  text-center transition-colors duration-500 ${
         theme === "light"
           ? "bg-gray-100 text-gray-900"
           : "bg-gray-900 text-gray-100"
@@ -296,7 +302,7 @@ const Test = () => {
         </div>
 
         {/* === SUBMIT BUTTON === */}
-        <button
+        <button onClick={handleBtnClick}
           type="submit"
           disabled={!isFormValid}
           className={`mt-10 w-[250px] h-[55px] rounded-[12px] text-[20px] font-semibold shadow-lg transition-all ${
@@ -310,6 +316,12 @@ const Test = () => {
           Analyze Eye Health
         </button>
       </form>
+
+      {
+      <TestResult userData ={userData} handleBtnClick={handleBtnClick}  />
+      }
+
+     
     </div>
   );
 };
