@@ -11,7 +11,7 @@ const Nav = () => {
   return (
     <div
       className={`w-full h-16 flex items-center justify-between px-6 sticky top-0 z-50 ${
-        theme === "light" ? "bg-white text-black" : "bg-black text-white"
+        theme === "light" ? "bg-black text-white" : "bg-black text-white"
       }`}
     >
    

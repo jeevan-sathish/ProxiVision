@@ -8,9 +8,9 @@ const NavThemeBtn = () => {
   return (
     <div>
          <button
-        className={`w-[30px] h-[30px] m-2.5 flex justify-center items-center
-                    ${theme==="light"?'text-black':'text-white'} 
-                      rounded-full transition scale-115 text-[30px] animate-spin`}
+        className={`w-[30px] h-[30px] m-2.5 flex justify-center items-center hover:animate-spin
+                    ${theme==="light"?'text-white':'text-white'} 
+                      rounded-full transition scale-115 text-[30px] `}
         onClick={toggleTheme}
       >
          {theme === "light" ? <MdLightMode/> : <MdOutlineLightMode/>} 

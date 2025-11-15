@@ -59,7 +59,7 @@ const Test = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Collected Data:", userData);
-    alert("Form submitted successfully ✅");
+
   };
 
   return (
@@ -72,9 +72,9 @@ const Test = () => {
     >
       {/* ==== HEADER ==== */}
       <div className="w-full h-20 relative flex justify-center items-center gap-3 overflow-hidden shadow-md">
-        <div className="absolute inset-0 bg-emerald-500 blur-3xl saturate-200 opacity-90"></div>
+        <div className="absolute inset-0 bg-transparent blur-3xl saturate-200 opacity-90"></div>
         <h1
-          className={`relative text-[34px] font-bold tracking-wide ${
+          className={`relative text-[30px] font-bold tracking-wide ${
             theme === "dark" ? "text-cyan-400" : "text-gray-800"
           }`}
         >
@@ -88,7 +88,7 @@ const Test = () => {
         onSubmit={handleSubmit}
         className="w-full flex flex-col items-center py-10 px-6"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full max-w-5xl">
 
           <div className="flex flex-col text-left">
             <label className="text-lg font-medium mb-2">Full Name</label>
@@ -318,7 +318,8 @@ const Test = () => {
       </form>
 
       {
-      <TestResult userData ={userData} handleBtnClick={handleBtnClick}  />
+    
+      btnclick&&<TestResult userData ={userData} handleBtnClick={handleBtnClick}  />
       }
 
      
