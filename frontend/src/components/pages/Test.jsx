@@ -2,10 +2,13 @@ import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { MdHealthAndSafety } from "react-icons/md";
 import TestResult from "../TestResult";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const Test = () => {
   const { theme } = useContext(ThemeContext);
-  const [btnclick,setbtnClick] =useState(false)
+
+  const [btnclick, setbtnClick] = useState(false);
+  const [responce, setResponse] = useState("");
 
   const [userData, setUserData] = useState({
     name: "",
@@ -19,32 +22,45 @@ const Test = () => {
     eyePain: "",
     blurriness: "",
     hydration: "",
+    familyHistory: "",
+    allergies: "",
+    outdoorTime: "",
+    stressLevel: "",
+    brightnessExposure: "",
+    eyeDropsUsage: "",
+    medicalConditions: "",
   });
 
   const [isFormValid, setIsFormValid] = useState(false);
 
-  function handleBtnClick(){
-      setbtnClick(prev=>!prev)
-  }
+  const handleBtnClick = () => {
+    setbtnClick((prev) => !prev);
+  };
 
+  // ⭐ VALIDATION
+  const requiredFields = [
+    "name",
+    "age",
+    "gender",
+    "screenTime",
+    "sleepHours",
+    "diet",
+    "eyePain",
+    "blurriness",
+    "hydration",
+    "familyHistory",
+    "allergies",
+    "outdoorTime",
+    "stressLevel",
+    "brightnessExposure",
+    "eyeDropsUsage",
+    "medicalConditions",
+  ];
 
   useEffect(() => {
-    const requiredFields = [
-      "name",
-      "age",
-      "gender",
-      "screenTime",
-      "sleepHours",
-      "diet",
-      "eyePain",
-      "blurriness",
-      "hydration",
-    ];
-
     const allFilled = requiredFields.every(
       (field) => userData[field] !== "" && userData[field] !== null
     );
-
     setIsFormValid(allFilled);
   }, [userData]);
 
@@ -56,273 +72,233 @@ const Test = () => {
     }));
   };
 
+  // ⭐ GEMINI AI OUTPUT
+  const generateContent = async () => {
+    const genAI = new GoogleGenerativeAI("AIzaSyCXdbwzRDDvi1wkiq3tgcLimcpwA4WSCfM");
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    const prompt = `
+      Based on this user data:
+      ${JSON.stringify(userData, null, 2)}
+
+      Provide complete eye health analysis , tips , recomendation  strictly in table format only .
+    `;
+
+    const result = await model.generateContent(prompt);
+    setResponse(result.response.text());
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Collected Data:", userData);
-
+    generateContent();
   };
+
+  // ⭐ REUSABLE INPUT COMPONENTS
+  const InputField = ({ label, name, value, placeholder, type = "text" }) => {
+    const isEmpty = requiredFields.includes(name) && value === "";
+
+    return (
+      <div className="flex flex-col text-left">
+        <label className="text-[16px] font-medium mb-1">{label}</label>
+        <input
+          type={type}
+          name={name}
+          value={value}
+          placeholder={placeholder}
+          onChange={handleChange}
+          className={`h-[45px] rounded-[8px] text-[16px] px-3 transition-all
+          ${theme === "dark"
+              ? `bg-gray-800 text-gray-200 border ${
+                  isEmpty ? "border-red-500" : "border-cyan-600"
+                }`
+              : `bg-white text-black border ${
+                  isEmpty ? "border-red-500" : "border-black"
+                }`
+            }`}
+        />
+      </div>
+    );
+  };
+
+  const SelectField = ({ label, name, value, options }) => {
+    const isEmpty = requiredFields.includes(name) && value === "";
+
+    return (
+      <div className="flex flex-col text-left">
+        <label className="text-[16px] font-medium mb-1">{label}</label>
+        <select
+          name={name}
+          value={value}
+          onChange={handleChange}
+          className={`h-[45px] rounded-[8px] text-[16px] px-3
+          ${theme === "dark"
+              ? `bg-gray-800 text-gray-200 border ${
+                  isEmpty ? "border-red-500" : "border-cyan-600"
+                }`
+              : `bg-white text-black border ${
+                  isEmpty ? "border-red-500" : "border-black"
+                }`
+            }`}
+        >
+          <option value="">Select an option</option>
+          {options.map((opt, idx) => (
+            <option key={idx}>{opt}</option>
+          ))}
+        </select>
+      </div>
+    );
+  };
+
+  const CheckboxField = ({ label, name, checked }) => (
+    <div className="flex items-center gap-2 mt-2">
+      <input
+        type="checkbox"
+        name={name}
+        checked={checked}
+        onChange={handleChange}
+        className="w-5 h-5 accent-cyan-500 cursor-pointer"
+      />
+      <label className="text-[16px] font-medium">{label}</label>
+    </div>
+  );
 
   return (
     <div
-      className={`w-full min-h-screen flex flex-col relative  text-center transition-colors duration-500 ${
+      className={`w-full min-h-screen flex flex-col text-center ${
         theme === "light"
-          ? "bg-gray-100 text-gray-900"
-          : "bg-gray-900 text-gray-100"
+          ? "bg-gray-100 text-gray-800"
+          : "bg-gray-800 text-gray-100"
       }`}
     >
-      {/* ==== HEADER ==== */}
-      <div className="w-full h-20 relative flex justify-center items-center gap-3 overflow-hidden shadow-md">
-        <div className="absolute inset-0 bg-transparent blur-3xl saturate-200 opacity-90"></div>
+      {/* HEADER */}
+      <div className="w-full h-15 flex justify-center items-center gap-3 shadow-md">
         <h1
-          className={`relative text-[30px] font-bold tracking-wide ${
+          className={`text-[25px] font-bold ${
             theme === "dark" ? "text-cyan-400" : "text-gray-800"
           }`}
         >
-          👁️ Eye Health Analysis Form
+           Eye Health Analysis
         </h1>
-        <MdHealthAndSafety className="relative w-[35px] h-[35px] text-amber-400" />
+        <MdHealthAndSafety className="w-[30px] h-[30px] text-amber-400" />
       </div>
 
-   
+      {/* FORM */}
       <form
         onSubmit={handleSubmit}
-        className="w-full flex flex-col items-center py-10 px-6"
+        className="w-full flex flex-col items-center py-8 px-4"
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full max-w-5xl">
 
-          <div className="flex flex-col text-left">
-            <label className="text-lg font-medium mb-2">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              value={userData.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-              required
-              className={`h-[55px] rounded-[10px] text-[18px] px-4 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
-                theme === "dark"
-                  ? "border-cyan-600 border-4 text-gray-200 bg-gray-800 focus:ring-cyan-500"
-                  : "border-black border-2 text-black bg-white focus:ring-gray-700"
-              }`}
-            />
-          </div>
+          <InputField label="Full Name" name="name" value={userData.name} placeholder="Enter your name" />
+          <InputField type="number" label="Age" name="age" value={userData.age} placeholder="Your age" />
 
-    
-          <div className="flex flex-col text-left">
-            <label className="text-lg font-medium mb-2">Age</label>
-            <input
-              type="number"
-              name="age"
-              value={userData.age}
-              onChange={handleChange}
-              placeholder="Enter your age"
-              min="1"
-              required
-              className={`h-[55px] rounded-[10px] text-[18px] px-4 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
-                theme === "dark"
-                  ? "border-cyan-600 border-4 text-gray-200 bg-gray-800 focus:ring-cyan-500"
-                  : "border-black border-2 text-black bg-white focus:ring-gray-700"
-              }`}
-            />
-          </div>
+          <SelectField
+            label="Gender"
+            name="gender"
+            value={userData.gender}
+            options={["Male", "Female", "Other"]}
+          />
 
-   
-          <div className="flex flex-col text-left">
-            <label className="text-lg font-medium mb-2">Gender</label>
-            <select
-              name="gender"
-              value={userData.gender}
-              onChange={handleChange}
-              required
-              className={`h-[55px] rounded-[10px] text-[18px] px-4 focus:outline-none focus:ring-2 ${
-                theme === "dark"
-                  ? "border-cyan-600 border-4 bg-gray-800 text-gray-200 focus:ring-cyan-500"
-                  : "border-black border-2 bg-white text-black focus:ring-gray-700"
-              }`}
-            >
-              <option value="">Select gender</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
-            </select>
-          </div>
+          <InputField type="number" label="Screen Time (hrs/day)" name="screenTime" value={userData.screenTime} placeholder="e.g. 5" />
 
-     
-          <div className="flex flex-col text-left">
-            <label className="text-lg font-medium mb-2">
-              Screen Time (hours/day)
-            </label>
-            <input
-              type="number"
-              name="screenTime"
-              value={userData.screenTime}
-              onChange={handleChange}
-              placeholder="e.g. 6"
-              min="0"
-              required
-              className={`h-[55px] rounded-[10px] text-[18px] px-4 placeholder-gray-400 focus:outline-none focus:ring-2 ${
-                theme === "dark"
-                  ? "border-cyan-600 border-4 bg-gray-800 text-gray-200 focus:ring-cyan-500"
-                  : "border-black border-2 bg-white text-black focus:ring-gray-700"
-              }`}
-            />
-          </div>
+          <InputField type="number" label="Sleep Hours" name="sleepHours" value={userData.sleepHours} placeholder="e.g. 7" />
 
+          <SelectField
+            label="Diet Type"
+            name="diet"
+            value={userData.diet}
+            options={["Balanced", "Junk-heavy", "Vegetarian", "Non-Vegetarian", "Vegan"]}
+          />
 
-          <div className="flex flex-col text-left">
-            <label className="text-lg font-medium mb-2">
-              Sleep Duration (hours/night)
-            </label>
-            <input
-              type="number"
-              name="sleepHours"
-              value={userData.sleepHours}
-              onChange={handleChange}
-              placeholder="e.g. 7"
-              min="0"
-              required
-              className={`h-[55px] rounded-[10px] text-[18px] px-4 placeholder-gray-400 focus:outline-none focus:ring-2 ${
-                theme === "dark"
-                  ? "border-cyan-600 border-4 bg-gray-800 text-gray-200 focus:ring-cyan-500"
-                  : "border-black border-2 bg-white text-black focus:ring-gray-700"
-              }`}
-            />
-          </div>
+          <CheckboxField label="Do you wear glasses?" name="glasses" checked={userData.glasses} />
+          <CheckboxField label="Had eye surgery?" name="surgery" checked={userData.surgery} />
 
+          <SelectField
+            label="Family History"
+            name="familyHistory"
+            value={userData.familyHistory}
+            options={["None", "Myopia", "Glaucoma", "Cataract", "Diabetic Retinopathy"]}
+          />
 
-          <div className="flex flex-col text-left">
-            <label className="text-lg font-medium mb-2">Diet Type</label>
-            <select
-              name="diet"
-              value={userData.diet}
-              onChange={handleChange}
-              required
-              className={`h-[55px] rounded-[10px] text-[18px] px-4 focus:outline-none focus:ring-2 ${
-                theme === "dark"
-                  ? "border-cyan-600 border-4 bg-gray-800 text-gray-200 focus:ring-cyan-500"
-                  : "border-black border-2 bg-white text-black focus:ring-gray-700"
-              }`}
-            >
-              <option value="">Select diet</option>
-              <option>Balanced</option>
-              <option>Junk-heavy</option>
-              <option>Vegetarian</option>
-              <option>Non-Vegetarian</option>
-              <option>Vegan</option>
-            </select>
-          </div>
+          <SelectField
+            label="Allergies"
+            name="allergies"
+            value={userData.allergies}
+            options={["No", "Dust", "Pollen", "Seasonal", "Unknown"]}
+          />
 
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              name="glasses"
-              checked={userData.glasses}
-              onChange={handleChange}
-              className="w-6 h-6 cursor-pointer accent-cyan-500"
-            />
-            <label className="text-lg font-medium">Do you wear glasses?</label>
-          </div>
+          <InputField type="number" label="Outdoor Time (hrs/day)" name="outdoorTime" value={userData.outdoorTime} placeholder="e.g. 2" />
 
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              name="surgery"
-              checked={userData.surgery}
-              onChange={handleChange}
-              className="w-6 h-6 cursor-pointer accent-cyan-500"
-            />
-            <label className="text-lg font-medium">
-              Have you undergone eye surgery?
-            </label>
-          </div>
+          <SelectField
+            label="Stress Level"
+            name="stressLevel"
+            value={userData.stressLevel}
+            options={["Low", "Medium", "High"]}
+          />
 
-      
-          <div className="flex flex-col text-left">
-            <label className="text-lg font-medium mb-2">Eye Pain Frequency</label>
-            <select
-              name="eyePain"
-              value={userData.eyePain}
-              onChange={handleChange}
-              required
-              className={`h-[55px] rounded-[10px] text-[18px] px-4 focus:outline-none focus:ring-2 ${
-                theme === "dark"
-                  ? "border-cyan-600 border-4 bg-gray-800 text-gray-200 focus:ring-cyan-500"
-                  : "border-black border-2 bg-white text-black focus:ring-gray-700"
-              }`}
-            >
-              <option value="">Select frequency</option>
-              <option>Never</option>
-              <option>Sometimes</option>
-              <option>Often</option>
-              <option>Always</option>
-            </select>
-          </div>
+          <SelectField
+            label="Screen Brightness Exposure"
+            name="brightnessExposure"
+            value={userData.brightnessExposure}
+            options={["Low", "Medium", "High"]}
+          />
 
-          <div className="flex flex-col text-left">
-            <label className="text-lg font-medium mb-2">
-              Blurriness in Vision
-            </label>
-            <select
-              name="blurriness"
-              value={userData.blurriness}
-              onChange={handleChange}
-              required
-              className={`h-[55px] rounded-[10px] text-[18px] px-4 focus:outline-none focus:ring-2 ${
-                theme === "dark"
-                  ? "border-cyan-600 border-4 bg-gray-800 text-gray-200 focus:ring-cyan-500"
-                  : "border-black border-2 bg-white text-black focus:ring-gray-700"
-              }`}
-            >
-              <option value="">Select</option>
-              <option>Yes</option>
-              <option>No</option>
-              <option>Sometimes</option>
-            </select>
-          </div>
+          <SelectField
+            label="Eye Drops Usage"
+            name="eyeDropsUsage"
+            value={userData.eyeDropsUsage}
+            options={["Never", "Occasionally", "Daily"]}
+          />
 
-          <div className="flex flex-col text-left">
-            <label className="text-lg font-medium mb-2">Hydration Level</label>
-            <select
-              name="hydration"
-              value={userData.hydration}
-              onChange={handleChange}
-              required
-              className={`h-[55px] rounded-[10px] text-[18px] px-4 focus:outline-none focus:ring-2 ${
-                theme === "dark"
-                  ? "border-cyan-600 border-4 bg-gray-800 text-gray-200 focus:ring-cyan-500"
-                  : "border-black border-2 bg-white text-black focus:ring-gray-700"
-              }`}
-            >
-              <option value="">Select hydration level</option>
-              <option>Low</option>
-              <option>Normal</option>
-              <option>High</option>
-            </select>
-          </div>
+          <SelectField
+            label="Medical Conditions"
+            name="medicalConditions"
+            value={userData.medicalConditions}
+            options={["None", "Diabetes", "Thyroid", "Hypertension"]}
+          />
+
+          <SelectField
+            label="Eye Pain Frequency"
+            name="eyePain"
+            value={userData.eyePain}
+            options={["Never", "Sometimes", "Often", "Always"]}
+          />
+
+          <SelectField
+            label="Blurriness"
+            name="blurriness"
+            value={userData.blurriness}
+            options={["No", "Yes", "Sometimes"]}
+          />
+
+          <SelectField
+            label="Hydration Level"
+            name="hydration"
+            value={userData.hydration}
+            options={["Low", "Normal", "High"]}
+          />
         </div>
 
-        {/* === SUBMIT BUTTON === */}
-        <button onClick={handleBtnClick}
+        {/* SUBMIT BUTTON */}
+        <button
+          onClick={handleBtnClick}
           type="submit"
           disabled={!isFormValid}
-          className={`mt-10 w-[250px] h-[55px] rounded-[12px] text-[20px] font-semibold shadow-lg transition-all ${
-            isFormValid
-              ? theme === "dark"
-                ? "bg-emerald-500 hover:bg-cyan-700 text-white cursor-pointer"
-                : "bg-emerald-500 hover:bg-blue-800 text-white cursor-pointer"
-              : "bg-emerald-500 text-gray-300 cursor-not-allowed"
-          }`}
+          className={`mt-10 w-[250px] h-[50px] rounded-[10px] text-[18px] font-semibold shadow-lg 
+            ${
+              !isFormValid
+                ? "bg-green-200 text-black cursor-not-allowed opacity-60"
+                : "bg-green-500 text-black cursor-pointer"
+            }
+          `}
         >
           Analyze Eye Health
         </button>
       </form>
 
-      {
-    
-      btnclick&&<TestResult userData ={userData} handleBtnClick={handleBtnClick}  />
-      }
-
-     
+      { (btnclick&&
+        <TestResult responce={responce}  setResponse={setResponse} handleBtnClick={handleBtnClick} />
+      )}
     </div>
   );
 };
