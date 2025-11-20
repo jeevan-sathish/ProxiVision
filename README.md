@@ -36,4 +36,4 @@ It analyzes user-provided inputs, distance from screen, and real-time interactio
 ### ▶️ Watch Demo Video
 
 ```md
-[Click here to watch the demo video](assets/heropage working.mp4)
+[Click here to watch the demo video](./frontend/src/assets/testpage%20working.mp4)
